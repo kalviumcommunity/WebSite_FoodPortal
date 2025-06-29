@@ -15,9 +15,24 @@ app.get('/api/dishes', async (req, res) => {
   });
   
   // Create a new dish (admin use)
-  app.post('/api/dishes', async (req, res) => {
-    const newDish = new Dish(req.body);
-    const saved = await newDish.save();
-    res.status(201).json(saved);
-  });
-  
+  router.post('/api/dishes', async (req, res) => {
+    try {
+        const { name, category, price, description } = req.body;
+
+        // Validate required fields
+        if (!name || !category || !price) {
+            return res.status(400).json({ error: 'Name, category, and price are required' });
+        }
+
+        // Create a new dish
+        const newDish = new Dish({ name, category, price, description });
+        const savedDish = await newDish.save();
+
+        res.status(201).json({ success: true, message: 'Dish created successfully', dish: savedDish });
+    } catch (error) {
+        console.error('Error creating dish:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+module.exports = router;
