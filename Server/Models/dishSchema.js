@@ -3,30 +3,30 @@ const mongoose = require('mongoose');
 const dishSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true, // Name is required
-        trim: true, // Removes whitespace from the beginning and end
+        required: true,
+        trim: true
     },
     category: {
         type: String,
-        required: true, // Category is required
+        required: true
     },
     price: {
         type: Number,
-        required: true, // Price is required
-        min: 0, // Price must be non-negative
+        required: true,
+        min: 0
     },
     image: {
-        type: String, // URL for the dish image
-        default: '', // Default value if no image is provided
+        type: String,
+        default: ''
     },
     description: {
         type: String,
-        trim: true, // Removes whitespace from the beginning and end
+        trim: true
     },
     createdAt: {
         type: Date,
-        default: Date.now, // Automatically sets the creation date
-    },
+        default: Date.now
+    }
 });
 
 const Dish = mongoose.model('Dish', dishSchema);
