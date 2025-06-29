@@ -3,6 +3,7 @@
 Welcome to Foodie Delight, a modern and responsive food website built to showcase delicious dishes, promote restaurants, and enhance the food ordering experience online.
 
 🚀 Features
+
 🍕 Home page with hero banner and featured dishes
 
 📋 Menu page with categorized food items
