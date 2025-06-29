@@ -1,37 +1,28 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    items: [
-        {
-            dish: { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Dish', 
-                required: true 
-            },
-            qty: {
-                type: Number,
-                required: true, 
-                min: 1 
-            }
-        }
-    ],
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart', 
+        required: true
+    },
     total: {
         type: Number,
         required: true,
-        min: 0 
+        min: 0
     },
     status: {
         type: String,
-        enum: ['Pending', 'Completed', 'Cancelled'], 
-        default: 'Pending' 
+        enum: ['Pending', 'Completed', 'Cancelled'],
+        default: 'Pending'
     },
     createdAt: {
         type: Date,
-        default: Date.now 
+        default: Date.now
     },
     updatedAt: {
         type: Date,
-        default: Date.now 
+        default: Date.now
     }
 });
 

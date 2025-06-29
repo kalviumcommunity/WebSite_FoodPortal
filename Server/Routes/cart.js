@@ -1,28 +1,68 @@
-router.post('/api/cart', (req, res) => {
-    const cart = req.body; 
+const express = require('express');
+const router = express.Router();
+const Cart = require('../models/cart'); 
 
-    if (!cart || !Array.isArray(cart)) {
-        return res.status(400).json({ error: 'Cart must be an array of items' });
+router.post('/api/cart', async (req, res) => {
+    try {
+        const cart = req.body;
+
+        if (!cart || !Array.isArray(cart)) {
+            return res.status(400).json({ error: 'Cart must be an array of items' });
+        }
+
+        const newCart = new Cart({ items: cart });
+        const savedCart = await newCart.save();
+
+        res.status(201).json({ success: true, message: 'Cart data saved successfully', cart: savedCart });
+    } catch (error) {
+        console.error('Error saving cart data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
+});
 
-    console.log('Received cart data:', cart);
+// PUT API to update cart data
+router.put('/api/cart/:id', async (req, res) => {
+    try {
+        const { id } = req.params; // Get cart ID from the URL
+        const cart = req.body;
 
-    res.status(201).json({ success: true, message: 'Cart data processed successfully', cart });
+        if (!cart || !Array.isArray(cart)) {
+            return res.status(400).json({ error: 'Cart must be an array of items' });
+        }
+
+        const updatedCart = await Cart.findByIdAndUpdate(
+            id,
+            { items: cart },
+            { new: true } 
+        );
+
+        if (!updatedCart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        res.status(200).json({ success: true, message: 'Cart data updated successfully', cart: updatedCart });
+    } catch (error) {
+        console.error('Error updating cart data:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 
-router.put('/api/cart', (req, res) => {
-    const cart = req.body; 
+router.get('/api/cart/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
 
-    if (!cart || !Array.isArray(cart)) {
-        return res.status(400).json({ error: 'Cart must be an array of items' });
+        const cart = await Cart.findById(id).populate('items.dish');
+
+        if (!cart) {
+            return res.status(404).json({ error: 'Cart not found' });
+        }
+
+        res.status(200).json({ success: true, cart });
+    } catch (error) {
+        console.error('Error fetching cart:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
-
-    console.log('Updated cart data:', cart);
-
-    res.status(200).json({ success: true, message: 'Cart data updated successfully', cart });
 });
-
-
 
 module.exports = router;
